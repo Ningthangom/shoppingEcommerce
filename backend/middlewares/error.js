@@ -31,9 +31,25 @@
 
            // handling mongoose validation error 
            if(err.name === 'validationError'){
-               const message = object.values(err.errors).map(value => value.message);
+               const message = Object.values(err.errors).map(value => value.message);
                error = new ErrorHandler(message, 400)
            }
+
+           //handling mongoose duplicate keys error
+           if(err.code === 11000) {
+               const message = `Duplicate ${Object.keys(err.keyValue)} entered`
+               error = new ErrorHandler(message, 400)
+           }
+
+           // handling wrong JWT error
+           if(err.name === 'JsonWebtokenError'){
+            const message = `JSON web token is invalid. Try again later`;
+            error = new ErrorHandler(message, 400)
+        }
+        if(err.name === 'TokenExpiredError'){
+            const message = `JSON web token is expired. Try again later`;
+            error = new ErrorHandler(message, 400)
+        }
 
            res.status(error.statusCode).json({
             success: false,
