@@ -5,7 +5,9 @@
     const { 
         newOrder, 
         getSingleOrder,
-        myOrders
+        myOrders,
+        allOrders,
+        updateOrder
     
     } = require('../controllers/orderController');
 
@@ -13,8 +15,15 @@
 
 
     router.route('/order/new').post(isAuthenticatedUser, newOrder);
-    router.route('/orders/:id').get(isAuthenticatedUser, getSingleOrder );
+    // router/me has to come first before /:id as it will mess up the id request in controller if put opposit
     router.route('/orders/me').get(isAuthenticatedUser, myOrders );
+    router.route('/orders/:id').get(isAuthenticatedUser, getSingleOrder );
+
+    router.route('/admin/orders').get(isAuthenticatedUser, authorizeRoles('admin'), allOrders );
+    router.route('/admin/order/:id').put(isAuthenticatedUser, authorizeRoles('admin'), updateOrder );
+
+
+
 
 
     module.exports = router;
