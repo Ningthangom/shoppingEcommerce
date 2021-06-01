@@ -54,7 +54,7 @@
 
         // get login user order => /api/v1/order/me
         exports.myOrders = catchAsyncErrors (async (req, res, next) => {
-            const orders = await Order.find(req.user.id)
+            const orders = await Order.find({user: req.user.id})
         
             res.status(200).json({
                 success: true,
