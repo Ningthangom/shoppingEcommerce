@@ -12,13 +12,19 @@
 
     // import all routes
     const products = require('./routes/product')
+    
 
     // import auth routes
     const auth = require('./routes/auth');
 
+    //import oder routes
+    const order = require('./routes/order')
+
 
     app.use('/api/v1',products);
     app.use('/api/v1',auth);
+    app.use('/api/v1/',order);
+
 
     // middleware to handle errors
     app.use(errorMiddleware);

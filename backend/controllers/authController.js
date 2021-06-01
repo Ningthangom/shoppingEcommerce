@@ -6,6 +6,7 @@
     const sendToken = require('../utils/jwtToken');
     const sendEmail = require('../utils/sendEmail')
     const crypto = require('crypto');
+const { send } = require('process');
 
 
     // registor a user => api/v1/registered
@@ -122,7 +123,59 @@
             sendToken(user, 200, res);
         })
 
+        // get currently login user details => /api/v1/me
+        exports.getUserProfile = catchAsyncErrors (async (req, res, next) => {
+                const user = await User.findById(req.user.id)
 
+                res.status(200).json({
+                    success: true,
+                    user
+                })
+        })
+
+
+        // Update password => /api/v1/password/update
+        exports.updatePassword = catchAsyncErrors (async (req, res, next) => {
+
+            const user = await  User.findById(req.user.id).select('+password');
+            //check previous user password
+            const isMatch = await user.comparePassword(req.body.oldPassword);
+            if(!isMatch){
+                return next(new ErrorHandler('Old password is incorrect'))
+            }
+            user.password = req.body.password;
+            await user.save();
+
+            sendToken(user, 200, res);
+
+        })
+
+        // update user profile => /api/v1/me/update
+        exports.updateProfile = catchAsyncErrors (async (req, res, next) => {
+
+            const newUserData = {
+                name: req.body.name, 
+                email:req.body.email
+
+            }
+            // update avator (profile picture) : todo
+
+            const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+                new: true,
+                runValidators: true,
+                useFindAndModify: false
+            })
+
+            res.status(200).json({
+                success: true,
+                message:'profile updated successfully'
+            
+
+            })
+
+
+
+        })
 
 
     //logout user => /api/v1/logout
@@ -136,6 +189,79 @@
 
         res.status(200).json({
             success: true,
-            message: 'Logged out '
+            message: 'Logged out'
+        })
+    })
+
+
+
+    //Admin routes 
+    
+
+    // get all users
+
+    exports.getAllUsers = catchAsyncErrors (async (req, res, next) => {
+        const users = await User.find();
+
+        res.status(200).json({
+            success: true,
+            users
+        })
+    })
+
+
+    // get user details => /api/v1/admin/user/:id
+    exports.getUserDetails = catchAsyncErrors (async (req, res, next) => {
+        const user = await User.findById(req.params.id);
+
+        if(!user){
+            return next(new ErrorHandler(`user is not found with id:${req.params.id}`))
+        }
+        res.status(200).json({
+            success: true,
+            user
+        })
+    })
+
+
+    
+        // update user profile => /api/v1/admin/user/:id
+        exports.updateUser = catchAsyncErrors (async (req, res, next) => {
+
+            const newUserData = {
+                name: req.body.name, 
+                email:req.body.email,
+                role:req.body.role
+
+            }
+            // update avator (profile picture) : todo
+
+            const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+                new: true,
+                runValidators: true,
+                useFindAndModify: false
+            })
+
+            res.status(200).json({
+                success: true,
+                message:'profile updated successfully',
+                user
+            })
+
+        })
+
+            //delete user  => /api/v1/admin/user/:id
+    exports.deleteUser = catchAsyncErrors (async (req, res, next) => {
+        const user = await User.findById(req.params.id);
+
+        if(!user){
+            return next(new ErrorHandler(`user is not found with id:${req.params.id}`))
+        }
+        // remove avator from cloudinary: to do
+        await user.remove();
+        res.status(200).json({
+            success: true,
+            message: 'user deleted successfully',
+            user
         })
     })
