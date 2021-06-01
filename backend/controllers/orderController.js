@@ -92,7 +92,7 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
     })
 
     order.orderStatus = req.body.status,
-        order.deliveredAt = Date.now()
+    order.deliveredAt = Date.now()
 
     await order.save()
 
