@@ -22,7 +22,7 @@
                 required: [true, 'Please enter product decription'],
               
             },
-            rating: {
+            ratings: {
                 type: Number,
                 default:0
             },
@@ -74,7 +74,12 @@
                 default:0
             }, 
             reviews : [
-                {
+            {
+                user: {
+                    type: mongoose.Schema.ObjectId,
+                    ref: 'User',
+                    required: true
+                },
                     name: {
                         type: String,
                         required: true,

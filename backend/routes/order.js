@@ -7,7 +7,8 @@
         getSingleOrder,
         myOrders,
         allOrders,
-        updateOrder
+        updateOrder,
+        deleteOrder
     
     } = require('../controllers/orderController');
 
@@ -20,7 +21,9 @@
     router.route('/orders/:id').get(isAuthenticatedUser, getSingleOrder );
 
     router.route('/admin/orders').get(isAuthenticatedUser, authorizeRoles('admin'), allOrders );
-    router.route('/admin/order/:id').put(isAuthenticatedUser, authorizeRoles('admin'), updateOrder );
+    router.route('/admin/order/:id').put(isAuthenticatedUser, authorizeRoles('admin'), updateOrder )
+                                                      .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteOrder);
+
 
 
 
