@@ -39,7 +39,6 @@ const APIFeatures = require('../utils/apiFeatures')
 
         res.status(200).json({
             success: true,
-            count: products.length,
             productCount,
             products
         })
