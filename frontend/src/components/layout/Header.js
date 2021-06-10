@@ -4,7 +4,7 @@
      return (
          <Fragment>
                  <nav className="navbar row">
-      <div classNameName="col-12 col-md-3">
+      <div className="col-12 col-md-3">
         <div className="navbar-brand">
           <img src="/images/logo6.png" />
         </div>

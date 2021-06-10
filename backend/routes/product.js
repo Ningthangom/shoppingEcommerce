@@ -20,7 +20,7 @@
 
 
 
-    router.route('/products').get( isAuthenticatedUser, getProducts);
+    router.route('/products').get(getProducts);
 
     //get single product
     router.route('/product/:id').get(getSingleProduct);
