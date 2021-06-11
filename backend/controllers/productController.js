@@ -24,7 +24,7 @@ const APIFeatures = require('../utils/apiFeatures')
 
         // paging the products => 
         // result per page 
-        const resPerPage = 9;
+        const resPerPage = 8;
 
         // this will be used in front end and this will show the total number of products
         const productsCount = await Product.countDocuments();
@@ -33,14 +33,21 @@ const APIFeatures = require('../utils/apiFeatures')
         const apiFeatures = new APIFeatures(Product.find(),req.query)
                                                 .search()
                                                 .filter()
-                                                .pagination(resPerPage);
+                                                
 
-        const products = await apiFeatures.query;
+        let products = await apiFeatures.query;
+        let filteredProductsCount = products.length;
+
+        apiFeatures.pagination(resPerPage);
+
+     products = await apiFeatures.query;
 
        
             res.status(200).json({
                 success: true,
                 productsCount,
+                resPerPage,
+                filteredProductsCount,
                 products
             })
    

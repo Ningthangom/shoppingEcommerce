@@ -11,15 +11,29 @@
         PRODUCT_DETAILS_FAIL,
         CLEAR_ERRORS } from '../constants/productConstants'
 
-        export const getProducts = () => async (dispatch) => {
+        export const getProducts = (keyword = '' , currentPage=1, price, category , rating= 0) => async (dispatch) => {
             try {
                 // the following dispatch will triger "all product request" case in productsReducer which will
                 // set loading to true and products to emty array  in state 
                 // then all the data will be brought from the backend :'api/v1/products' and put them in data variables
                 // all products success will be dispatched and data will be passed as payload
                 // then in productsReducer: products and productsCount will be pulled and saved in the state
+               
                 dispatch({ type: ALL_PRODUCTS_REQUEST})
-                const { data } = await axios.get('/api/v1/products')
+
+             //   let searchLink = `/api/v1/products?keyword=${keyword}&page=${currentPage}`
+                let priceFilterLink =  `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}
+                                                    &ratings[gte]=${rating}`
+                
+                if(category){
+                    priceFilterLink =  `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}
+                    &category=${category}&ratings[gte]=${rating}`
+                }
+                
+                
+                
+                const { data } = await axios.get(priceFilterLink)
+                console.log(data)
                 dispatch({ 
                     type: ALL_PRODUCTS_SUCCESS, 
                     payload: data
