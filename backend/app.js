@@ -2,13 +2,17 @@
 
     const express = require("express");
     const app = express();
-
     const cookieParser = require('cookie-parser');
+    const fileUpload = require('express-fileupload');
+
 
     const errorMiddleware = require("./middlewares/error")
 
     app.use(express.json());
+    app.use(express.urlencoded({extend: true}));
     app.use(cookieParser());
+    app.use(fileUpload());
+
 
     // import all routes
     const products = require('./routes/product')

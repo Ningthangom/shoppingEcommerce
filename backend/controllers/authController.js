@@ -6,11 +6,17 @@
     const sendToken = require('../utils/jwtToken');
     const sendEmail = require('../utils/sendEmail')
     const crypto = require('crypto');
-const { send } = require('process');
+    const cloudinary = require('cloudinary')
 
 
     // registor a user => api/v1/registered
     exports.registerUser = catchAsyncErrors (async (req, res, next) => {
+
+        const result = await cloudinary.v2.uploader.upload(req.body.avator, {
+            folder: 'avators',
+            width:150,
+            crop: "scale"
+        })
 
         // pull the name, email and password from req.body
         const {name, email, password} = req.body;
@@ -20,8 +26,8 @@ const { send } = require('process');
              email,
               password,
               avator: {
-                  public_id: 'products/chairmount_nuubea',
-                  url: 'https://res.cloudinary.com/bookit/image/upload/v1606231285/products/chairmount_nuubea.jpg'
+                  public_id: result.public_id,
+                  url: result.secure_url
               }
             })
 
