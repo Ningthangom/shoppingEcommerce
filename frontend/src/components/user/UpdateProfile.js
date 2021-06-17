@@ -26,7 +26,7 @@ const UpdateProfile = ({history}) => {
         if(user){
            setName(user.name);
            setEmail(user.email);
-           setAvator(user.avator)
+           setAvatorPreview(user.avator.url)
         }
 
         if(error) {
@@ -36,7 +36,7 @@ const UpdateProfile = ({history}) => {
         if(isUpdated) {
             alert.success('user profile updated successfully')
             dispatch(loadUser())
-            history.pushState('/me')
+            history.push('/me')
             dispatch({
                 type: UPDATE_PROFILE_RESET
             })
@@ -54,7 +54,7 @@ const UpdateProfile = ({history}) => {
         dispatch(updateProfile(formData))
        
     }
-    const onChange = e=> {
+    const onChange = e => {
         
                 const reader = new FileReader();
                 reader.onload = () =>{

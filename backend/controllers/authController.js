@@ -75,7 +75,7 @@
         await user.save({validateBeforeSave: false})
 
         // create reset password url 
-        const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`
+        const resetUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`
 
         const message = `your password reset token is as follow: \n\n${resetUrl}\n\n if you have not requested this email, please ingor it`
 
@@ -103,7 +103,7 @@
     })
 
         // reset password => /api/v1/password/reset/:token
-        exports.resetPassword = catchAsyncErrors (async (req, res, next) => {
+  exports.resetPassword = catchAsyncErrors (async (req, res, next) => {
             // hash url token
             const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
             const user = await User.findOne({
@@ -114,8 +114,8 @@
                 return next(new ErrorHandler('Password reset is not invalid or expired', 400))
             }
 
-            if(req.body.password !== req.body.comfirmPassword){
-                return next(new ErrorHandler('password does not match', 401))
+            if(req.body.password !== req.body.confirmPassword){
+                return next(new ErrorHandler('Password does not match', 400))
             }
 
             // set up new password
@@ -128,6 +128,9 @@
             await user.save()
             sendToken(user, 200, res);
         })
+
+
+
 
         // get currently login user details => /api/v1/me
         exports.getUserProfile = catchAsyncErrors (async (req, res, next) => {
@@ -165,6 +168,23 @@
 
             }
             // update avator (profile picture) : todo
+            if (req.body.avator !== '') {
+                const user = await User.findById(req.user.id)
+        
+                const image_id = user.avator.public_id;
+                const res = await cloudinary.v2.uploader.destroy(image_id);
+        
+                const result = await cloudinary.v2.uploader.upload(req.body.avator, {
+                    folder: 'avators',
+                    width: 150,
+                    crop: "scale"
+                })
+        
+                newUserData.avator = {
+                    public_id: result.public_id,
+                    url: result.secure_url
+                }
+            }
 
             const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
                 new: true,
