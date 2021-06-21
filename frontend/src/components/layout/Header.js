@@ -26,7 +26,11 @@
       <div className="col-12 col-md-3">
         <div className="navbar-brand">
           <Link to="/">
-          <img src="/images/logo6.png"/>
+          <img style={{
+            width:200,
+            height:50
+          }} src="/images/directshopping!.png"/>
+         
           </Link>
         </div>
       </div>

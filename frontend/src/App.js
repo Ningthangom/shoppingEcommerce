@@ -1,8 +1,11 @@
 
   // eslint-disable-next-line no-lone-blocks
  //for routing different pages
- import {useEffect} from 'react'
+ import {useEffect, useState} from 'react'
   import { BrowserRouter as Router, Route} from 'react-router-dom'
+  import axios from 'axios'
+  import {Elements} from '@stripe/react-stripe-js'
+  import {loadStripe} from '@stripe/stripe-js'
  
   import Header from './components/layout/Header'
   import  Footer from './components/layout/Footer'
@@ -21,6 +24,7 @@ import Cart from './components/cart/Cart'
   import NewPassword from './components/user/NewPassword'
   import Shipping from './components/cart/Shipping'
   import ConfirmOrder from './components/cart/ConfirmOrder'
+  import Payment from './components/cart/Payment'
 
   import ProtectedRoute from './components/routes/ProtectedRoute'
   
@@ -30,8 +34,15 @@ import Cart from './components/cart/Cart'
 
 
 function App() {
+  const [stripeApiKey, setStripeApiKey] = useState(' ');
   useEffect(() => {
     store.dispatch(loadUser())
+
+    async function getStripeApiKey( ) {
+      const {data } = await axios.get('/api/v1/stripeapi')
+      setStripeApiKey(data.stripeApiKey)
+    }
+    getStripeApiKey( );
   },[])
   return (
     <Router>
@@ -50,6 +61,12 @@ function App() {
               <ProtectedRoute path="/cart" component={Cart} exact/>
               <ProtectedRoute path="/shipping" component={Shipping} />
               <ProtectedRoute path="/order/confirm" component={ConfirmOrder} />
+              {stripeApiKey && 
+              <Elements stripe= {loadStripe(stripeApiKey)}>
+                <ProtectedRoute path='/payment' component={Payment}/>
+              </Elements>
+              }
+
               <Route path="/password/forgot" component={ForgotPassword} exact/>
               <Route path="/password/reset/:token" component={NewPassword} exact/>
           </div>
