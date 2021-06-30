@@ -54,7 +54,7 @@ const ProductLists = ({ history}) => {
             rows: []
 
         }
-        Object.keys(products).forEach(product => {
+    products.forEach(product => {
             data.rows.push({
                 id: product._id,
               name: product.name,

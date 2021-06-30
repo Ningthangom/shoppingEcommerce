@@ -4,8 +4,24 @@ import { Link } from 'react-router-dom'
 import Metadata from '../layout/Metadata'
 import Loader from '../layout/Loader'
 import Sidebar from './Sidebar'
+import {useDispatch, useSelector} from 'react-redux'
+import { getAdminProducts, clearError } from '../../action/productActions'
 
 const Dashboard = () => {
+    const dispatch =useDispatch();
+    const {products}= useSelector(state => state.products)
+
+    let outOfStock = 0;
+    products.forEach(product =>{
+        if(product.stock ===0 ) {
+            outOfStock += 1;
+        }
+    })
+
+    useEffect(() => {
+        dispatch(getAdminProducts())
+    },[ dispatch])
+
     return (
         <Fragment>
             <Metadata title={'Dashboard'}/>
@@ -30,7 +46,7 @@ const Dashboard = () => {
                                 <div className="col-xl-3 col-sm-6 mb-3">
                                     <div className="card text-white bg-success o-hidden h-100">
                                         <div className="card-body">
-                                            <div className="text-center card-font-size">Products<br /> <b>56</b></div>
+                                            <div className="text-center card-font-size">Products<br /> <b>{products && products.length} </b></div>
                                         </div>
                                         <Link className="card-footer text-white clearfix small z-1" to="/admin/products">
                                             <span className="float-left">View Details</span>
@@ -75,7 +91,7 @@ const Dashboard = () => {
                                 <div className="col-xl-3 col-sm-6 mb-3">
                                     <div className="card text-white bg-warning o-hidden h-100">
                                         <div className="card-body">
-                                            <div className="text-center card-font-size">Out of Stock<br /> <b>4</b></div>
+                                            <div className="text-center card-font-size"><br /> <b>{outOfStock}</b></div>
                                         </div>
                                     </div>
                                 </div>
