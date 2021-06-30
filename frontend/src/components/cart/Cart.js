@@ -45,7 +45,7 @@ const Cart = ({history}) => {
                                     <div className="cart-item" key={item.product}>
                                 <div className="row">
                                     <div className="col-4 col-lg-3">
-                                        <img src={item.image} alt="Laptop" height="90" width="115"/>
+                                    <img src={item.image} alt={item.name} height="45" width="65" />
                                     </div>
 
                                     <div className="col-5 col-lg-3">

@@ -53,6 +53,18 @@ const APIFeatures = require('../utils/apiFeatures')
    
     })
 
+        // get all products for admin=> /api/v1/admin/products
+
+        exports.getAdminProducts = catchAsyncErrors (async (req, res, next) => {
+       const   products = await Product.findOne();
+                res.status(200).json({
+                    success: true,
+                    products
+                })
+       
+        })
+    
+
 
     // get one product's details => api/v1/product/:id
     exports.getSingleProduct = catchAsyncErrors (async (req, res, next) => {

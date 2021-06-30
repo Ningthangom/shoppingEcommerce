@@ -5,6 +5,7 @@
 
     const {
         getProducts,
+        getAdminProducts,
         newProduct, 
         getSingleProduct,
         updateProduct, 
@@ -21,6 +22,7 @@
 
 
     router.route('/products').get(getProducts);
+    router.route('/admin/products').get(getAdminProducts);
 
     //get single product
     router.route('/product/:id').get(getSingleProduct);

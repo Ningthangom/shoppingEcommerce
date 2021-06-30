@@ -5,6 +5,7 @@ import { useAlert } from 'react-alert'
 import {useDispatch, useSelector} from 'react-redux'
 import { useStripe, useElements, CardNumberElement, CardExpiryElement, CardCvcElement} from '@stripe/react-stripe-js'
 import axios from 'axios'
+import {createOrder, clearError} from '../../action/orderActions'
 
  
  const Payment = ({history}) => {
@@ -14,7 +15,10 @@ import axios from 'axios'
     const elements = useElements( );
     const dispatch = useDispatch( );
     const { user } = useSelector(state=> state.auth)
-    const {cartItems, shippingInfo} = useSelector(state=> state.cart)
+    
+    const {cartItems, shippingInfo} = useSelector(state=> state.cart);
+    const { error } = useSelector(state => state.newOrder)
+
 
     const options = {
         style : {
@@ -28,9 +32,27 @@ import axios from 'axios'
     }
 
     useEffect(() => {
+        if(error){
+            alert.error(error)
+            dispatch(clearError)
+        }
 
-    }, [ ])
+    }, [ dispatch, alert, error])
+
+    const order = {
+        orderItems: cartItems,
+        shippingInfo
+    }
+
     const orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
+
+    if(orderInfo) {
+        order.itemsPrice = orderInfo.itemsPrice
+        order.shippingPrice = orderInfo.shippingPrice
+        order.taxPrice = orderInfo.taxPrice
+        order.totalPrice = orderInfo.totalPrice
+    }
+
     const paymentData = {
         // the amount will be in cents 
         amount: Math.round(orderInfo.totalPrice * 100)
@@ -51,7 +73,7 @@ import axios from 'axios'
             res = await axios.post('/api/v1/payment/process', paymentData, config)
             // client_secret is from the backend 
             const clientSecret = res.data.client_secret;
-            console.log(clientSecret)
+         
 
             if(!stripe || !elements) {
                     return;
@@ -71,7 +93,13 @@ import axios from 'axios'
             }else {
                 // the payment is processed or not 
                 if(result.paymentIntent.status === 'succeeded'){
-                    // to do new order 
+                   
+                    order.paymentInfo = {
+                        id: result.paymentIntent.id, 
+                        status: result.paymentIntent.status
+                    }
+
+                    dispatch(createOrder(order))
                     history.push('/success')
                 }else {
                     alert.error('there is some issue while payment is processing')
@@ -80,7 +108,7 @@ import axios from 'axios'
         }catch(error){
             document.querySelector('#pay_btn').disabled = false;
             alert.error(error.response.data.message)
-            console.log(error.response.data)
+     
         }
     }
 
