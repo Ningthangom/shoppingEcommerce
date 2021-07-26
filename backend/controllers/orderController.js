@@ -66,14 +66,14 @@ const order = require('../models/order');
         // get all orders=> /api/v1/admin/orders
         exports.allOrders = catchAsyncErrors (async (req, res, next) => {
             const orders = await Order.find( )
-            let totalOrderAmonunt = 0;
+            let totalAmount = 0;
             orders.forEach( order => {
-                totalOrderAmonunt += order.totalPrice
+                totalAmount += order.totalPrice
             })
        
             res.status(200).json({
                 success: true,
-                totalOrderAmonunt,
+                totalAmount,
                 orders
             })
         })

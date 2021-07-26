@@ -5,14 +5,15 @@
     import thunk from 'redux-thunk'
     import {composeWithDevTools} from 'redux-devtools-extension'
 
-    import { productsReducer, productDetailsReducer, newReviewReducer } from './reducers/productReducers'
+    import { productsReducer, productDetailsReducer, newReviewReducer,newProductReducer, productReducer } from './reducers/productReducers'
     import { authReducer,userReducer, forgotPasswordReducer } from './reducers/userReducers'
     import { cartReducer } from './reducers/cartReducers'
-    import { newOrderReducer, myOrdersRuducer, orderDetailsRuducer } from './reducers/orderReducers'
+    import { newOrderReducer, myOrdersRuducer, orderDetailsRuducer,allOrdersReducer } from './reducers/orderReducers'
 
     const reducer = combineReducers ({
             products: productsReducer,
             productDetails: productDetailsReducer,
+            product:productReducer,
             auth: authReducer,
             user: userReducer,
             forgotPassword: forgotPasswordReducer,
@@ -20,7 +21,10 @@
             newOrder: newOrderReducer,
             myOrder: myOrdersRuducer,
             orderDetails: orderDetailsRuducer,
-            newReview: newReviewReducer
+            allOrders:allOrdersReducer,
+            newReview: newReviewReducer,
+            newProduct: newProductReducer
+
 
     })
 

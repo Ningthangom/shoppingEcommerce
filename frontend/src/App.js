@@ -4,6 +4,7 @@
  import {useEffect, useState} from 'react'
   import { BrowserRouter as Router, Route} from 'react-router-dom'
   import axios from 'axios'
+  import { useSelector } from 'react-redux'
   import {Elements} from '@stripe/react-stripe-js'
   import {loadStripe} from '@stripe/stripe-js'
  
@@ -16,6 +17,9 @@
 //admin 
 import Dashboard from './components/admin/Dashboard'
 import ProductLists from './components/admin/ProductLists'
+import NewProduct from './components/admin/NewProduct'
+import UpdateProduct from './components/admin/UpdateProduct'
+import OrdersList from './components/admin/OrdersList'
 
 //user 
   import Login from './components/user/Login'
@@ -59,6 +63,9 @@ function App() {
     }
     getStripeApiKey( );
   },[])
+
+ const {user, loading} = useSelector(state => state.auth)
+
   return (
     <Router>
       <div className="App">
@@ -99,7 +106,12 @@ function App() {
           </div>
            <ProtectedRoute path="/dashboard" isAdmin = {true} component={Dashboard} exact/>
            <ProtectedRoute path="/admin/products" isAdmin = {true} component={ProductLists} exact/>
+           <ProtectedRoute path="/admin/product" isAdmin = {true} component={NewProduct} exact/>
+           <ProtectedRoute path="/admin/product/:id" isAdmin={true} component={UpdateProduct} exact />
+           <ProtectedRoute path="/admin/oders" isAdmin = {true} component={OrdersList} exact/>
+         {/* loading maybe added here  */}
             <Footer/>
+            
         </div>
     </Router>
   

@@ -5,10 +5,33 @@ const Product = require('../models/product')
 const ErrorHandler = require('../utils/errorHandler')
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors')
 const APIFeatures = require('../utils/apiFeatures')
+const cloudinary = require('cloudinary')
 
     // Create new product that will go to /api/v1/admin/products/new
 
     exports.newProduct = catchAsyncErrors (async (req,res,next) => {
+
+        let images =  []
+
+        // the following if statement will check if the user upload only one image or more 
+        // push an image into images 
+        if(typeof req.body.images === 'string'){
+            images.push(req.body.images)
+        }else{
+            images = req.body.images
+        }
+        let imagesLinks = [];
+        for(let i = 0; i < images.length; i++) { 
+            const result = await cloudinary.v2.uploader.upload(images[i], {
+                folder:'products'
+            })
+            imagesLinks.push({
+                public_id: result.public_id,
+                url: result.secure_url
+            })
+        }
+
+        req.body.images = imagesLinks
 
         req.body.user = req.user.id;
         const product = await Product.create(req.body);
@@ -89,6 +112,35 @@ const APIFeatures = require('../utils/apiFeatures')
             if(!product) { 
                 return next(new ErrorHandler('Product not found',404))
             }
+            let images =  []
+
+            // the following if statement will check if the user upload only one image or more 
+            // push an image into images 
+            if(typeof req.body.images === 'string'){
+                images.push(req.body.images)
+            }else{
+                images = req.body.images
+            }
+            if(images !== undefined){
+                   // deleting images associated with the products 
+            for(let i = 0; i <product.images.length; i++) {
+                const result = await cloudinary.v2.uploader.destroy(product.images[i].public_id)
+            }
+            
+            let imagesLinks = [];
+            for(let i = 0; i < images.length; i++) { 
+                const result = await cloudinary.v2.uploader.upload(images[i], {
+                    folder:'products'
+                })
+                imagesLinks.push({
+                    public_id: result.public_id,
+                    url: result.secure_url
+                })
+            }
+    
+            req.body.images = imagesLinks
+            }
+         
             
             product = await Product.findByIdAndUpdate(req.params.id, req.body, {
                 new: true,
@@ -109,6 +161,11 @@ const APIFeatures = require('../utils/apiFeatures')
 
             if(!product) { 
                 return next(new ErrorHandler('Product not found',404))
+            }
+
+            // deleting images associated with the products 
+            for(let i = 0; i <product.images.length; i++) {
+                const result = await cloudinary.v2.uploader.destroy(product.images[i].public_id)
             }
 
             await product.remove();
