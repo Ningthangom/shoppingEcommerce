@@ -5,24 +5,29 @@
     import thunk from 'redux-thunk'
     import {composeWithDevTools} from 'redux-devtools-extension'
 
-    import { productsReducer, productDetailsReducer, newReviewReducer,newProductReducer, productReducer } from './reducers/productReducers'
-    import { authReducer,userReducer, forgotPasswordReducer } from './reducers/userReducers'
+    import { productsReducer, productDetailsReducer, newReviewReducer,newProductReducer, productReducer,productReviewReducer,reviewReducer } from './reducers/productReducers'
+    import { authReducer,userReducer, forgotPasswordReducer,allUsersReducer, userDetailsReducer } from './reducers/userReducers'
     import { cartReducer } from './reducers/cartReducers'
-    import { newOrderReducer, myOrdersRuducer, orderDetailsRuducer,allOrdersReducer } from './reducers/orderReducers'
+    import { newOrderReducer, myOrdersRuducer, orderDetailsRuducer,allOrdersReducer,orderReducer } from './reducers/orderReducers'
 
     const reducer = combineReducers ({
             products: productsReducer,
             productDetails: productDetailsReducer,
             product:productReducer,
+            productReview:productReviewReducer,
             auth: authReducer,
             user: userReducer,
+            allUsers:allUsersReducer,
+            userDetails:userDetailsReducer,
             forgotPassword: forgotPasswordReducer,
             cart: cartReducer,
             newOrder: newOrderReducer,
             myOrder: myOrdersRuducer,
             orderDetails: orderDetailsRuducer,
             allOrders:allOrdersReducer,
+            order:orderReducer,
             newReview: newReviewReducer,
+            review:reviewReducer,
             newProduct: newProductReducer
 
 

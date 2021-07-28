@@ -37,7 +37,7 @@
 
     //rating product
     router.route('/reviews').get(isAuthenticatedUser,getProductReviews)
-                                        .delete(isAuthenticatedUser, deleteProductReviews)
+    router.route('/reviews').delete(isAuthenticatedUser, deleteProductReviews)
     router.route('/review').put(isAuthenticatedUser, createProductReview)
  
 

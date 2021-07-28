@@ -8,15 +8,18 @@ import Sidebar from './Sidebar'
 
 import {useDispatch, useSelector} from 'react-redux'
 import {useAlert} from 'react-alert'
-import { allOrders, clearError } from '../../action/orderActions'
-/* import { DELETE_PRODUCT_RESET } from '../../constants/productConstants'
- */
+import { allOrders, deleteOrder, clearError } from '../../action/orderActions'
+import { DELETE_ORDER_RESET } from '../../constants/orderConstants'
 
-const OrdersList = () => {
+
+const OrdersList = ({history}) => {
     const alert = useAlert();
     const dispatch = useDispatch();
 
+    console.log("here orders from all orders will be called");
     const { loading, error, orders } = useSelector(state => state.allOrders)
+    const {isDeleted} = useSelector(state=> state.order)
+    console.log(orders);
 
     useEffect(() => {
         dispatch(allOrders());
@@ -24,14 +27,17 @@ const OrdersList = () => {
             alert.error(error)
             dispatch(clearError())
         }
-     /* 
+     
         if(isDeleted) {
-            alert.success('Product was deleted successfully')
-            history.push('/admin/products')
-            dispatch({ type: DELETE_PRODUCT_RESET})
-        } */
-    }, [ dispatch, alert, error ])
+            alert.success('order was deleted successfully')
+            history.push('/admin/orders')
+            dispatch({ type: DELETE_ORDER_RESET})
+        }
+    }, [ dispatch, alert, error, isDeleted, history])
 
+    const deleteOrderHandler = (id) => {
+        dispatch(deleteOrder(id))
+    }
 
     const setOrders = () => {
         const data = {
@@ -66,6 +72,7 @@ const OrdersList = () => {
 
         }
     orders.forEach(order => {
+        console.log(order);
             data.rows.push({
                 id: order._id,
               numofItems: order.orderItems.length,
@@ -78,7 +85,7 @@ const OrdersList = () => {
                 <Link to={`/admin/order/${order._id}`} className="btn btn-primary py-1 px-2">
                     <i className = "fa fa-eye"></i>
                 </Link>
-                <button className="btn btn-danger py-1 px-2 ml-2" >
+                <button className="btn btn-danger py-1 px-2 ml-2" onClick={()=> deleteOrderHandler(order._id)} >
                 <i className = "fa fa-trash"></i>
                 </button>
                 </Fragment>

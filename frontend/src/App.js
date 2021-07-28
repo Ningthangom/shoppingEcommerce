@@ -20,6 +20,10 @@ import ProductLists from './components/admin/ProductLists'
 import NewProduct from './components/admin/NewProduct'
 import UpdateProduct from './components/admin/UpdateProduct'
 import OrdersList from './components/admin/OrdersList'
+import ProcessOrder from './components/admin/ProcessOrder'
+import UsersList from './components/admin/UsersList'
+import UpdateUser from './components/admin/UpdateUser'
+import ProductReviews from './components/admin/ProductReviews'
 
 //user 
   import Login from './components/user/Login'
@@ -93,22 +97,23 @@ function App() {
              
               <ProtectedRoute path="/cart" component={Cart} exact/>
               <ProtectedRoute path="/shipping" component={Shipping} />
-              <ProtectedRoute path="/order/confirm" component={ConfirmOrder} />
+              <ProtectedRoute path="/confirm" component={ConfirmOrder} />
               <ProtectedRoute path="/success" component={OrderSuccess} />
               {stripeApiKey && 
               <Elements stripe= {loadStripe(stripeApiKey)}>
                 <ProtectedRoute path='/payment' component={Payment}/>
               </Elements>
-              }
-
-             
-             
+              }      
           </div>
            <ProtectedRoute path="/dashboard" isAdmin = {true} component={Dashboard} exact/>
            <ProtectedRoute path="/admin/products" isAdmin = {true} component={ProductLists} exact/>
            <ProtectedRoute path="/admin/product" isAdmin = {true} component={NewProduct} exact/>
            <ProtectedRoute path="/admin/product/:id" isAdmin={true} component={UpdateProduct} exact />
-           <ProtectedRoute path="/admin/oders" isAdmin = {true} component={OrdersList} exact/>
+           <ProtectedRoute path="/admin/order/:id" isAdmin={true} component={ProcessOrder} exact/> 
+           <ProtectedRoute path="/admin/orders" isAdmin = {true} component={OrdersList} exact/>
+           <ProtectedRoute path="/admin/users" isAdmin = {true} component={UsersList} exact/>
+           <ProtectedRoute path="/admin/user/:id" isAdmin={true} component={UpdateUser} exact/>
+           <ProtectedRoute path="/admin/reviews" isAdmin={true} component={ProductReviews} exact/>  
          {/* loading maybe added here  */}
             <Footer/>
             

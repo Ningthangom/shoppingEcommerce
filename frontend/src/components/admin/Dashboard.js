@@ -5,11 +5,17 @@ import Metadata from '../layout/Metadata'
 import Loader from '../layout/Loader'
 import Sidebar from './Sidebar'
 import {useDispatch, useSelector} from 'react-redux'
-import { getAdminProducts, clearError } from '../../action/productActions'
+import { getAdminProducts } from '../../action/productActions'
+import { allOrders } from '../../action/orderActions'
+import {allUsers } from '../../action/userAction'
+
 
 const Dashboard = () => {
     const dispatch =useDispatch();
     const {products}= useSelector(state => state.products)
+    const {users}= useSelector(state => state.allUsers)
+    const {orders, totalAmount, loading}= useSelector(state => state.allOrders)
+
 
     let outOfStock = 0;
     products.forEach(product =>{
@@ -20,6 +26,8 @@ const Dashboard = () => {
 
     useEffect(() => {
         dispatch(getAdminProducts())
+        dispatch(allOrders())
+        dispatch(allUsers())
     },[ dispatch])
 
     return (
@@ -31,11 +39,14 @@ const Dashboard = () => {
                 </div>
                 <div className="col-12 col-md-10">
                     <h1 className="my-4">Dashboard</h1>
+                    { loading ? <Loader/> : (
+                        <Fragment>
+                            <Metadata title={'Admin Dashboard'}/>
                             <div className="row pr-4">
                                 <div className="col-xl-12 col-sm-12 mb-3">
                                     <div className="card text-white bg-primary o-hidden h-100">
                                         <div className="card-body">
-                                            <div className="text-center card-font-size">Total Amount<br /> <b>$4567</b>
+                                            <div className="text-center card-font-size">Total Amount<br /> <b>${totalAmount && totalAmount.toFixed(2)}</b>
                                             </div>
                                         </div>
                                     </div>
@@ -61,7 +72,7 @@ const Dashboard = () => {
                                 <div className="col-xl-3 col-sm-6 mb-3">
                                     <div className="card text-white bg-danger o-hidden h-100">
                                         <div className="card-body">
-                                            <div className="text-center card-font-size">Orders<br /> <b>125</b></div>
+                                            <div className="text-center card-font-size">Orders<br /> <b>{orders && orders.length}</b></div>
                                         </div>
                                         <Link className="card-footer text-white clearfix small z-1" to="/admin/orders">
                                             <span className="float-left">View Details</span>
@@ -76,7 +87,7 @@ const Dashboard = () => {
                                 <div className="col-xl-3 col-sm-6 mb-3">
                                     <div className="card text-white bg-info o-hidden h-100">
                                         <div className="card-body">
-                                            <div className="text-center card-font-size">Users<br /> <b>45</b></div>
+                                            <div className="text-center card-font-size">Users<br /> <b>{users && users.length}</b></div>
                                         </div>
                                         <Link className="card-footer text-white clearfix small z-1" to="/admin/users">
                                             <span className="float-left">View Details</span>
@@ -95,9 +106,12 @@ const Dashboard = () => {
                                         </div>
                                     </div>
                                 </div>
+                                </div>
+                        </Fragment>
+                    ) }
+                            
                             </div>
                 </div>
-            </div>
             
         </Fragment>
     )

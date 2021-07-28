@@ -283,7 +283,10 @@
         if(!user){
             return next(new ErrorHandler(`user is not found with id:${req.params.id}`))
         }
-        // remove avator from cloudinary: to do
+        // remove avator from cloudinary
+        const image_id = user.avator.public_id;
+        await cloudinary.v2.uploader.destroy(image_id);
+
         await user.remove();
         res.status(200).json({
             success: true,
