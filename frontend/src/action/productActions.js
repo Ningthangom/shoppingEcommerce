@@ -62,6 +62,7 @@
                 }
 
                 const { data } = await axios.get(priceFilterLink)
+                /* const { data } = await axios.get(`/api/v1/products`) */
                 console.log(data)
                 dispatch({ 
                     type: ALL_PRODUCTS_SUCCESS, 

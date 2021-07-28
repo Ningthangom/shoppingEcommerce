@@ -3,8 +3,9 @@
 
     const connectDatabase = () => {
 
-        mongoose.connect(process.env.DB_LOCAL_URI, {
+        mongoose.connect(process.env.DB_URI, {
             useNewUrlParser: true,
+            dbName:'shopit',
             useUnifiedTopology: true,
             useCreateIndex: true,
         }).then (con => {

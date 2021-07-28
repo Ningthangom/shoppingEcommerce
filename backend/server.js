@@ -17,7 +17,11 @@
 
 
     // setting up config file 
-    dotenv.config({path: "backend/config/config.env"})
+if (process.env.NODE_ENV !== 'PRODUCTION') require('dotenv').config({ path: 'backend/config/config.env' })
+    
+// dotenv.config({ path: 'backend/config/config.env' })
+// Connecting to database
+connectDatabase();
 
         // setting up cloudinary configs
         cloudinary.config({
@@ -25,11 +29,7 @@
             api_key        : process.env.CLOUDINARY_API_KEY,
             api_secret: process.env.CLOUDINARY_API_SECRET
         })
-
-    // connecting to database 
-    connectDatabase();
-
-    
+  
    const server =  app.listen(process.env.PORT, () => {
         console.log(`server started on PORT: ${process.env.PORT} in ${process.env.NODE_ENV} mode`)
     })
