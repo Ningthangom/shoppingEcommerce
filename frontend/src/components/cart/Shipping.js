@@ -38,7 +38,7 @@ const Shipping = ({history}) => {
             postalCode,
             country
         }))
-        history.push('/order/confirm')
+        history.push('/confirm')
     }
 
 

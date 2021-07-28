@@ -29,7 +29,7 @@
           <img style={{
             width:200,
             height:50
-          }} alt="" src="/images/directshopping!.png"/>
+          }} alt="" src="/images/chinhills2.png"/>
          
           </Link>
         </div>
