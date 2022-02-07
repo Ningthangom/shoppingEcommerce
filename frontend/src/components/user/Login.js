@@ -32,15 +32,15 @@ import {login, clearError} from '../../action/userAction'
                 dispatch(clearError())
             }
 
-        },[dispatch, alert, isAuthenticated, error, history])
+        },[dispatch, alert, isAuthenticated,redirect, error, history])
 
         const submitHandler = (e)=> {
-            e.preventDefault( );
+            e.preventDefault();
             dispatch( login(email, password))
         }
         return (
             <Fragment>
-                {loading ? <Loader/> : (
+                {/* loading ? <Loader/> : */ (
                     <Fragment>
                             <Metadata title={'Login'}/>
                         <div className="row wrapper"> 

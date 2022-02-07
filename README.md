@@ -1,5 +1,7 @@
 # Ecommerce site 
+
 ## For small retail shops 
+## live app: https://chinhillshop.herokuapp.com/
 
 ## Tech
 -   Mongodb (atlas)
